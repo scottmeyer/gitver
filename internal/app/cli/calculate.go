@@ -3,6 +3,8 @@ package cli
 import (
 	"os"
 
+	"fmt"
+
 	"github.com/scottmeyer/gitver/internal/pkg/gitver"
 	"github.com/scottmeyer/gitver/internal/pkg/log"
 
@@ -14,7 +16,7 @@ func calculateVersion(path string) (*gitver.Version, error) {
 
 	r, err := git.PlainOpen(path)
 	if err != nil {
-		log.Printf("%s not a git directory.", path)
+		fmt.Printf("%v", gitver.NewNoGitRepositoryError(path))
 		os.Exit(1)
 	}
 
@@ -23,5 +25,5 @@ func calculateVersion(path string) (*gitver.Version, error) {
 		return nil, err
 	}
 
-	return nil, nil
+	return &gitver.Version{SemVer: "0.0.1"}, nil
 }

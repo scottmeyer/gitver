@@ -12,7 +12,7 @@ func EnsureHeadIsNotDetached(repo *git.Repository) error {
 	ref, err := repo.Head()
 
 	if err == nil && ref.Name() == "HEAD" {
-		return NewDetachedHeadError()
+		return NewDetachedHeadError(ref.Hash().String())
 	}
 
 	return err //NewNoGitRepositoryError(arguments.TargetPath)

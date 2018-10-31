@@ -3,15 +3,17 @@ package gitver
 import "fmt"
 
 //DetachedHeadError head is in detached state
-type DetachedHeadError struct{}
+type DetachedHeadError struct {
+	Hash string
+}
 
 func (e DetachedHeadError) Error() string {
-	return fmt.Sprintf("status: detached head")
+	return fmt.Sprintf("It looks like the branch being examined is a detached Head pointing to commit %s.\nWithout a proper branch name GitVersion cannot determine the build version.", e.Hash[0:6])
 }
 
 //NewDetachedHeadError create a new detached head error
-func NewDetachedHeadError() DetachedHeadError {
-	return DetachedHeadError{}
+func NewDetachedHeadError(hash string) DetachedHeadError {
+	return DetachedHeadError{Hash: hash}
 }
 
 //NoGitRepositoryError the target path is not a git repository

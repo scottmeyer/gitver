@@ -37,10 +37,12 @@ var rootCmd = &cobra.Command{
 		if len(args) == 1 {
 			arguments.TargetPath = args[0]
 		}
-		_, err := calculateVersion(arguments.TargetPath)
+		v, err := calculateVersion(arguments.TargetPath)
 
 		if err != nil {
 			fmt.Printf("error: %v \n", err)
+		} else {
+			fmt.Printf("semver: %s", v.SemVer)
 		}
 	},
 }
