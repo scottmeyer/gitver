@@ -2,6 +2,7 @@ package cli
 
 import (
 	"os"
+	"strings"
 
 	"fmt"
 
@@ -21,7 +22,7 @@ func calculateVersion(path string) (*gitver.Version, error) {
 		os.Exit(1)
 	}
 
-	_, err = gitver.EnsureHeadIsNotDetached(r)
+	head, err := gitver.EnsureHeadIsNotDetached(r)
 	if err != nil {
 		return nil, err
 	}
@@ -31,5 +32,17 @@ func calculateVersion(path string) (*gitver.Version, error) {
 		return nil, err
 	}
 
-	return &gitver.Version{SemVer: fmt.Sprintf("%s.%v", desc.Tag.Name().Short(), desc.Distance)}, nil
+	t := ""
+	log.Debugf("head name: %s", head.Name().Short())
+	if desc.Distance != 0 {
+		log.Debugf("head name: %s", head.Name().Short())
+		if strings.Contains(head.Name().Short(), "dev") {
+			t = "-alpha"
+		} else if strings.Contains(head.Name().Short(), "master") {
+			t = "-beta"
+		}
+
+	}
+
+	return &gitver.Version{SemVer: fmt.Sprintf("%s%s%v", desc.Tag.Name().Short(), t, desc.Distance)}, nil
 }
