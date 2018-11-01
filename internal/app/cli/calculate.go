@@ -31,5 +31,5 @@ func calculateVersion(path string) (*gitver.Version, error) {
 		return nil, err
 	}
 
-	return &gitver.Version{SemVer: desc.Tag.Name().Short()}, nil
+	return &gitver.Version{SemVer: fmt.Sprintf("%s.%v", desc.Tag.Name().Short(), desc.Distance)}, nil
 }
