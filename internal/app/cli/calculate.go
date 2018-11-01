@@ -7,6 +7,7 @@ import (
 
 	"github.com/scottmeyer/gitver/internal/pkg/gitver"
 	"github.com/scottmeyer/gitver/internal/pkg/log"
+	"github.com/scottmeyer/gitver/internal/pkg/version"
 
 	"gopkg.in/src-d/go-git.v4"
 )
@@ -20,10 +21,15 @@ func calculateVersion(path string) (*gitver.Version, error) {
 		os.Exit(1)
 	}
 
-	err = gitver.EnsureHeadIsNotDetached(r)
+	_, err = gitver.EnsureHeadIsNotDetached(r)
 	if err != nil {
 		return nil, err
 	}
 
-	return &gitver.Version{SemVer: "0.0.1"}, nil
+	desc, err := version.Find(r, &version.DescribeOptions{Tags: true})
+	if err != nil {
+		return nil, err
+	}
+
+	return &gitver.Version{SemVer: desc.Tag.Name().Short()}, nil
 }

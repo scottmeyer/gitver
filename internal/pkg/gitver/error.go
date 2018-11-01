@@ -8,7 +8,7 @@ type DetachedHeadError struct {
 }
 
 func (e DetachedHeadError) Error() string {
-	return fmt.Sprintf("It looks like the branch being examined is a detached Head pointing to commit %s.\nWithout a proper branch name GitVersion cannot determine the build version.", e.Hash[0:6])
+	return fmt.Sprintf("detached head pointing to commit %s", e.Hash[0:6])
 }
 
 //NewDetachedHeadError create a new detached head error
